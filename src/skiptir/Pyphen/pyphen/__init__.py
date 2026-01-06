@@ -24,28 +24,29 @@ Pure Python module to hyphenate text, inspired by Ruby's Text::Hyphen.
 import os
 import re
 
-__all__ = ('Pyphen', 'LANGUAGES', 'language_fallback')
+__all__ = ("Pyphen", "LANGUAGES", "language_fallback")
 
 # cache of per-file HyphDict objects
 hdcache = {}
 
 # precompile some stuff
-parse_hex = re.compile(r'\^{2}([0-9a-f]{2})').sub
-parse = re.compile(r'(\d?)(\D?)').findall
+parse_hex = re.compile(r"\^{2}([0-9a-f]{2})").sub
+parse = re.compile(r"(\d?)(\D?)").findall
 
 try:
     from pkg_resources import resource_filename
-    dictionaries_root = resource_filename('pyphen', 'dictionaries')
+
+    dictionaries_root = resource_filename("pyphen", "dictionaries")
 except ImportError:
-    dictionaries_root = os.path.join(os.path.dirname(__file__), 'dictionaries')
+    dictionaries_root = os.path.join(os.path.dirname(__file__), "dictionaries")
 
 LANGUAGES = {}
 for filename in sorted(os.listdir(dictionaries_root)):
-    if filename.endswith('.dic'):
+    if filename.endswith(".dic"):
         name = filename[5:-4]
         full_path = os.path.join(dictionaries_root, filename)
         LANGUAGES[name] = full_path
-        short_name = name.split('_')[0]
+        short_name = name.split("_")[0]
         if short_name not in LANGUAGES:
             LANGUAGES[short_name] = full_path
 
@@ -59,9 +60,9 @@ def language_fallback(language):
     including scripts for languages with multiple regions available.
 
     """
-    parts = language.replace('-', '_').split('_')
+    parts = language.replace("-", "_").split("_")
     while parts:
-        language = '_'.join(parts)
+        language = "_".join(parts)
         if language in LANGUAGES:
             return language
         parts.pop()
@@ -74,12 +75,13 @@ class AlternativeParser(object):
     the pattern when called with an odd value.
 
     """
+
     def __init__(self, pattern, alternative):
-        alternative = alternative.split(',')
+        alternative = alternative.split(",")
         self.change = alternative[0]
         self.index = int(alternative[1])
         self.cut = int(alternative[2])
-        if pattern.startswith('.'):
+        if pattern.startswith("."):
             self.index += 1
 
     def __call__(self, value):
@@ -93,6 +95,7 @@ class AlternativeParser(object):
 
 class DataInt(int):
     """``int`` with some other data can be stuck to in a ``data`` attribute."""
+
     def __new__(cls, value, data=None, reference=None):
         """Create a new ``DataInt``.
 
@@ -119,32 +122,36 @@ class HyphDict(object):
         """
         self.patterns = {}
 
-        with open(filename, 'rb') as stream:
+        with open(filename, "rb") as stream:
             # see "man 4 hunspell", iscii-devanagari is not supported by python
-            charset = stream.readline().strip().decode('ascii')
-            if charset.lower() == 'microsoft-cp1251':
-                charset = 'cp1251'
+            charset = stream.readline().strip().decode("ascii")
+            if charset.lower() == "microsoft-cp1251":
+                charset = "cp1251"
             for pattern in stream:
                 pattern = pattern.decode(charset).strip()
-                if not pattern or pattern.startswith((
-                        '%', '#', 'LEFTHYPHENMIN', 'RIGHTHYPHENMIN',
-                        'COMPOUNDLEFTHYPHENMIN', 'COMPOUNDRIGHTHYPHENMIN')):
+                if not pattern or pattern.startswith(
+                    (
+                        "%",
+                        "#",
+                        "LEFTHYPHENMIN",
+                        "RIGHTHYPHENMIN",
+                        "COMPOUNDLEFTHYPHENMIN",
+                        "COMPOUNDRIGHTHYPHENMIN",
+                    )
+                ):
                     continue
 
                 # replace ^^hh with the real character
-                pattern = parse_hex(
-                    lambda match: chr(int(match.group(1), 16)), pattern)
+                pattern = parse_hex(lambda match: chr(int(match.group(1), 16)), pattern)
 
                 # read nonstandard hyphen alternatives
-                if '/' in pattern:
-                    pattern, alternative = pattern.split('/', 1)
+                if "/" in pattern:
+                    pattern, alternative = pattern.split("/", 1)
                     factory = AlternativeParser(pattern, alternative)
                 else:
                     factory = int
 
-                tags, values = zip(*[
-                    (string, factory(i or '0'))
-                    for i, string in parse(pattern)])
+                tags, values = zip(*[(string, factory(i or "0")) for i, string in parse(pattern)])
 
                 # if only zeros, skip this pattern
                 if max(values) == 0:
@@ -157,7 +164,7 @@ class HyphDict(object):
                 while not values[end - 1]:
                     end -= 1
 
-                self.patterns[''.join(tags)] = start, values[start:end]
+                self.patterns["".join(tags)] = start, values[start:end]
 
         self.cache = {}
         self.maxlen = max(len(key) for key in self.patterns)
@@ -191,22 +198,22 @@ class HyphDict(object):
         word = word.lower()
         points = self.cache.get(word)
         if points is None:
-            pointed_word = '.%s.' % word
+            pointed_word = ".%s." % word
             references = [0] * (len(pointed_word) + 1)
 
             for i in range(len(pointed_word) - 1):
-                for j in range(
-                        i + 1, min(i + self.maxlen, len(pointed_word)) + 1):
+                for j in range(i + 1, min(i + self.maxlen, len(pointed_word)) + 1):
                     pattern = self.patterns.get(pointed_word[i:j])
                     if pattern:
                         offset, values = pattern
                         slice_ = slice(i + offset, i + offset + len(values))
-                        references[slice_] = map(
-                            max, values, references[slice_])
+                        references[slice_] = map(max, values, references[slice_])
 
             points = [
                 DataInt(i - 1, reference=reference)
-                for i, reference in enumerate(references) if reference % 2]
+                for i, reference in enumerate(references)
+                if reference % 2
+            ]
             self.cache[word] = points
         return points
 
@@ -257,12 +264,12 @@ class Pyphen(object):
                 index += position
                 if word.isupper():
                     change = change.upper()
-                c1, c2 = change.split('=')
-                yield word[:index] + c1, c2 + word[index + cut:]
+                c1, c2 = change.split("=")
+                yield word[:index] + c1, c2 + word[index + cut :]
             else:
                 yield word[:position], word[position:]
 
-    def wrap(self, word, width, hyphen='-'):
+    def wrap(self, word, width, hyphen="-"):
         """Get the longest possible first part and the last part of a word.
 
         :param word: unicode string of the word to hyphenate
@@ -280,7 +287,7 @@ class Pyphen(object):
             if len(w1) <= width:
                 return w1 + hyphen, w2
 
-    def inserted(self, word, hyphen='-'):
+    def inserted(self, word, hyphen="-"):
         """Get the word as a string with all the possible hyphens inserted.
 
         :param word: unicode string of the word to hyphenate
@@ -299,10 +306,10 @@ class Pyphen(object):
                 index += position
                 if word.isupper():
                     change = change.upper()
-                word_list[index:index + cut] = change.replace('=', hyphen)
+                word_list[index : index + cut] = change.replace("=", hyphen)
             else:
                 word_list.insert(position, hyphen)
 
-        return ''.join(word_list)
+        return "".join(word_list)
 
     __call__ = iterate

@@ -30,14 +30,18 @@ skiptir [--mode MODE] [--hyphen HYPHEN]
 ```
 
 The tool reads text from standard input and prints the
-hyphenated result to standard output.
+hyphenated result to standard output, e.g.:
 
-MODE is 'pattern' by default, which means using Pyphen
+```bash
+echo "Þetta er íslensk setning" | skiptir --hyphen "·"
+```
+
+MODE is `pattern` by default, which means using Pyphen
 with the latest Icelandic hyphenation patterns.
 Other modes are not supported yet.
 
-HYPHEN refers to a custom hyphenation character, e.g. · or -.
-By default, the program uses the soft hyphen character (U+00AD).
+HYPHEN refers to a custom hyphenation character, e.g. `·` or `-`.
+By default, the program uses the soft hyphen character (`U+00AD`).
 
 ## Version History
 
