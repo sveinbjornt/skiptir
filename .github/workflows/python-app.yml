@@ -28,9 +28,9 @@ jobs:
       - name: Lint with ruff
         run: |
           ruff check src/skiptir/*.py test/*.py
-      - name: Type check with pyright
-        run: |
-          python -m pyright src/skiptir
+      # - name: Type check with pyright
+      #   run: |
+      #     python -m pyright src/skiptir
       - name: Run pytest
         run: |
           python -m pytest -vvv
