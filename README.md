@@ -1,4 +1,10 @@
 # skiptir
+
+`skiptir` is a Python package to hyphenate Icelandic text.
+Requires Python 3.9 or later.
+
+----
+
 Command-line tool for Icelandic hyphenation
 
 This tool hyphenates Icelandic text.

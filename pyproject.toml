@@ -1,0 +1,150 @@
+[project]
+name = "skiptir"
+version = "1.0.0"
+description = "Hyphenate Icelandic text."
+authors = [
+    { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
+    { name = "Kristján Rúnarsson", email = "kristjanr@example.com" },
+
+]
+maintainers = [
+    { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
+]
+readme = "README.md"
+license = "BSD-3-Clause"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: Icelandic",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+    "Topic :: Text Processing :: Linguistic",
+] # For classifier list see: https://pypi.org/pypi?%3Aaction=list_classifiers
+keywords = ["icelandic", "iceland", "hyphenation"]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/sveinbjornt/skiptir"
+Documentation = "https://github.com/sveinbjornt/skiptir#readme"
+Issues = "https://github.com/sveinbjornt/skiptir/issues"
+Changelog = "https://github.com/sveinbjornt/skiptir#version-history"
+
+[project.optional-dependencies]
+# Dev dependencies
+dev = [
+    # Linting, testing
+    "pytest>=8.4.2",
+    "types-setuptools>=68.2.0",
+    "ruff>=0.12.17",
+    "pyright>=1.1.0",
+    "coverage[toml]>=7.3.1",
+]
+
+# *** Configuration of tools ***
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    # Ignore deprecation warnings in libraries, their problem not ours
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+branch = true              # Enable branch coverage
+source = ["src/skiptir"]   # Only test coverage of `skiptir` package
+command_line = "-m pytest" # Run all tests when calculating coverage
+
+[tool.coverage.report]
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
+# skip_covered = true        # Skip showing fully covered files
+skip_empty = true # Skip empty files
+sort = "-Cover"   # Sort by coverage percentage
+precision = 2     # Precision of output percentage
+fail_under = 65   # Fail if total covered under threshold
+
+[tool.pyright]
+typeCheckingMode = "strict"
+# The following settings are off by default, even in strict mode
+reportCallInDefaultInitializer = "information"
+reportImplicitOverride = "information"
+reportImplicitStringConcatenation = "information"
+reportImportCycles = "warning"
+reportMissingSuperCall = "none"
+reportPropertyTypeMismatch = "warning"
+reportUninitializedInstanceVariable = "information"
+reportUnnecessaryTypeIgnoreComment = "warning"
+reportUnusedCallResult = "none"
+
+[tool.ruff]
+# See https://beta.ruff.rs/docs/rules/ for list of rules
+# Enable all rules
+# select = ["ALL"]
+# Ignore specific rules
+# (we should aim to have these as few as possible)
+lint.ignore = [
+    "D",       # Docstring style rules
+    "ANN",     # Missing type annotations
+    "TD",      # Pedantic TODO comment rules
+    "FIX002",  # Line contains TODO rule
+    "SLOT000", # str subclass should define __slots__
+    "SIM105",  # contextlib.suppress rule
+    "BLE",     # Blind `except:`
+    "A",       # Shadowing of builtins
+    "ERA",     # Commented out code
+    "FBT",     # Forbids boolean positional arguments
+    "COM",     # Commas (sometimes takes issue with formatting)
+    "S101",    # Disallow assert statements rule
+    "PLR0912", # "Too many statements" rule
+    "C90",     # Function complexity rules
+    "UP",      # Deprecation rules
+    "TRY",     # Pedantic exception rules
+    "EM",      # Pedantic exception message rules
+    "TID",     # No relative parent imports rule
+    "RSE102",  # Bug: https://github.com/astral-sh/ruff/issues/5416
+    "FA100",   #
+    "T201",    # Print statements
+    "SIM115",  #
+    "PTH123",  # Pathlib rule
+]
+# Silence complaints when lines are slightly over 88 characters long
+line-length = 100
+
+[tool.ruff.lint.per-file-ignores]
+"./run.py" = ["T201"]
+"cli_client/run.py" = ["INP001", "T201", "PLR0915"]
+
+[tool.ruff.lint.isort]
+section-order = [
+    "future",
+    "typehints",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+# Have typing libraries above other imports
+typehints = ["typing", "typing_extensions", "types", "types-setuptools"]
+
+# *** Build system configuration ***
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# [tool.setuptools.package-data]
+# skiptir = ["*.db"]
+
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
