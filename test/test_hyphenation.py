@@ -13,7 +13,8 @@
 ### The script assumes that all of the test input is represented in the gold standard.
 
 import sys
-from Pyphen import pyphen
+import pyphen
+
 
 # dictionary of hyphenated words
 standard_hyphenated_words = {}

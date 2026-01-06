@@ -1,8 +1,8 @@
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
-[![Release](https://shields.io/github/v/release/sveinbjornt/skiptir?display_name=tag)](https://github.com/sveinbjornt/skiptir/releases)
+[![release](https://shields.io/github/v/release/sveinbjornt/skiptir?display_name=tag)](https://github.com/sveinbjornt/skiptir/releases)
 [![PyPI](https://img.shields.io/pypi/v/skiptir)](https://pypi.org/project/skiptir/)
-[![Build](https://github.com/sveinbjornt/skiptir/actions/workflows/python-app.yml/badge.svg)](https://github.com/sveinbjornt/skiptir/actions)
+[![build](https://github.com/sveinbjornt/skiptir/actions/workflows/python-app.yml/badge.svg)](https://github.com/sveinbjornt/skiptir/actions)
 
 # skiptir
 
@@ -11,7 +11,7 @@ Requires Python 3.9 or later.
 
 ## Installation
 
-You can install `skiptir` via pip:
+You can install `skiptir` via `pip`:
 
 ```bash
 pip install skiptir
@@ -49,4 +49,25 @@ TBD
 
 ## License
 
-TBD
+(c) Copyright 2026 [Sveinbjörn Þórðarson](mailto:sveinbjorn@sveinbjorn.org)  
+(c) Copyright 2020 [Kristján Rúnarsson](mailto:krunars@gmail.com)
+
+The program files are licensed under the Apache License, Version 2.0
+(the "License"); you may not use the files except in compliance with
+the License or with another license under which they are also licensed
+according to this file or another written declaration by the author.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+## Acknowledgements
+
+The basic funcionality in this package is based on work by Kristján
+Rúnarsson, who originally developed it under the auspices of the
+Icelandic Government's Language Technology Program (2016-2019).

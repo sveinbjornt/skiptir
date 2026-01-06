@@ -7,7 +7,7 @@ skiptir: Hyphenate Icelandic text
 from typing import Optional
 
 import re
-from Pyphen import pyphen
+import pyphen
 
 from .const import DEFAULT_HYPHENATION_CHAR, DEFAULT_HYPHENATION_MODE
 
@@ -34,7 +34,7 @@ def hyphenate(
 
     # list for separated words and strings of whitespace from the input
     # guaranteed to return the first string as '' or whitespace
-    words_and_whitespace = re.split(r"(\S+)", input_text)
+    words_and_whitespace: list[str] = re.split(r"(\S+)", input_text)
 
     # corresponding list for the hyphenated output
     hyphenated_words_and_whitespace = []
