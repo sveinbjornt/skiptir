@@ -4,8 +4,7 @@ version = "1.0.0"
 description = "Hyphenate Icelandic text."
 authors = [
     { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
-    { name = "Kristján Rúnarsson", email = "kristjanr@example.com" },
-
+    { name = "Kristján Rúnarsson", email = "krunars@gmail.com" },
 ]
 maintainers = [
     { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
@@ -43,7 +42,6 @@ Changelog = "https://github.com/sveinbjornt/skiptir#version-history"
 [project.optional-dependencies]
 # Dev dependencies
 dev = [
-    # Linting, testing
     "pytest==9.0.2",
     "types-setuptools==80.9.0.20251223",
     "ruff>=0.14.10",
@@ -65,11 +63,10 @@ command_line = "-m pytest" # Run all tests when calculating coverage
 
 [tool.coverage.report]
 exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
-# skip_covered = true        # Skip showing fully covered files
-skip_empty = true # Skip empty files
-sort = "-Cover"   # Sort by coverage percentage
-precision = 2     # Precision of output percentage
-fail_under = 65   # Fail if total covered under threshold
+skip_empty = true                                                 # Skip empty files
+sort = "-Cover"                                                   # Sort by coverage percentage
+precision = 2                                                     # Precision of output percentage
+fail_under = 65                                                   # Fail if total covered under threshold
 
 [tool.pyright]
 typeCheckingMode = "strict"
