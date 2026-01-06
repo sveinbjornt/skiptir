@@ -3,14 +3,25 @@
 `skiptir` is a Python package to hyphenate Icelandic text.
 Requires Python 3.9 or later.
 
-----
+## Installation
 
-Command-line tool for Icelandic hyphenation
+You can install `skiptir` via pip:
 
-This tool hyphenates Icelandic text.
+```bash
+pip install skiptir
+```
 
-Usage:
-./skiptir.py [--mode MODE] [--hyphen HYPHEN]
+## Usage
+
+```python
+TBD
+```
+
+Command line tool usage:
+
+```bash
+skiptir [--mode MODE] [--hyphen HYPHEN]
+```
 
 The tool reads text from standard input and prints the
 hyphenated result to standard output.
@@ -21,3 +32,11 @@ Other modes are not supported yet.
 
 HYPHEN refers to a custom hyphenation character, e.g. · or -.
 By default, the program uses the soft hyphen character (U+00AD).
+
+## Version History
+
+TBD
+
+## License
+
+TBD
