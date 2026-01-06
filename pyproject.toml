@@ -42,7 +42,7 @@ Changelog = "https://github.com/sveinbjornt/skiptir#version-history"
 [project.optional-dependencies]
 # Dev dependencies
 dev = [
-    "pytest==9.0.2",
+    "pytest==8.4.2",
     "types-setuptools==80.9.0.20251223",
     "ruff>=0.14.10",
     "pyright>=1.1.407",
