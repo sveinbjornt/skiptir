@@ -33,6 +33,9 @@ keywords = ["icelandic", "iceland", "hyphenation"]
 requires-python = ">=3.9"
 dependencies = []
 
+[project.scripts]
+skiptir = "skiptir.main:main"
+
 [project.urls]
 Repository = "https://github.com/sveinbjornt/skiptir"
 Documentation = "https://github.com/sveinbjornt/skiptir#readme"

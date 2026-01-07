@@ -2,6 +2,8 @@
 
 skiptir: Hyphenate Icelandic text
 
+Main hyphenation functionality.
+
 """
 
 from typing import Optional
@@ -50,7 +52,7 @@ def hyphenate(
         else:  # i.e. if it's a word
             # hyphenate the word (note that the hyphen is a soft hyphen (U+00AD))
             hyphenated_words_and_whitespace.append(
-                hyphenator.inserted(item, hyphen=hyphen_character)
+                hyphenator.inserted(item, hyphen=hyphen_character)  # type: ignore
             )
             # the next item will be whitespace
             is_space = True

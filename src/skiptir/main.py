@@ -22,7 +22,8 @@ def main():
     args = parser.parse_args()
 
     input_text = sys.stdin.read()
-    print(hyphenate(input_text, hyphenation_mode=args.mode, hyphen_character=args.hyphen))
+    print(hyphenate(input_text, hyphenation_mode=args.mode, hyphen_character=args.hyphen), end="")
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
