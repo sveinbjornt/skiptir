@@ -20,7 +20,10 @@ pip install skiptir
 ## Usage
 
 ```python
-TBD
+from skiptir import hyphenate
+
+hyphenate("Þetta er íslensk setning.", hyphen="-")
+'Þetta er ís-lensk setn-ing.'
 ```
 
 Command line tool usage:
@@ -33,7 +36,8 @@ The tool reads text from standard input and prints the
 hyphenated result to standard output, e.g.:
 
 ```bash
-echo "Þetta er íslensk setning" | skiptir --hyphen "·"
+echo "Þetta er íslensk setning." | skiptir --hyphen "-"
+Þetta er ís-lensk setn-ing.
 ```
 
 MODE is `pattern` by default, which means using Pyphen
@@ -41,7 +45,7 @@ with the latest Icelandic hyphenation patterns.
 Other modes are not supported yet.
 
 HYPHEN refers to a custom hyphenation character, e.g. `·` or `-`.
-By default, the program uses the soft hyphen character (`U+00AD`).
+By default, `skiptir` uses the soft hyphen character (`U+00AD`).
 
 ## Version History
 
