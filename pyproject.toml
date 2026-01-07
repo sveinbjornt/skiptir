@@ -31,7 +31,7 @@ classifiers = [
 ] # For classifier list see: https://pypi.org/pypi?%3Aaction=list_classifiers
 keywords = ["icelandic", "iceland", "hyphenation"]
 requires-python = ">=3.9"
-dependencies = ["pyphen==0.17.2"]
+dependencies = []
 
 [project.urls]
 Repository = "https://github.com/sveinbjornt/skiptir"
@@ -132,8 +132,8 @@ typehints = ["typing", "typing_extensions", "types", "types-setuptools"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
-# [tool.setuptools.package-data]
-# skiptir = ["*.db"]
+[tool.setuptools.package-data]
+"skiptir.pyphen" = ["dictionaries/*.dic"]
 
 [build-system]
 requires = ["setuptools>=45", "setuptools_scm>=6.2"]
