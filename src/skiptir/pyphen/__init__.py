@@ -34,10 +34,10 @@ parse_hex = re.compile(r"\^{2}([0-9a-f]{2})").sub
 parse = re.compile(r"(\d?)(\D?)").findall
 
 try:
-    from pkg_resources import resource_filename
+    from importlib.resources import files
 
-    dictionaries_root = resource_filename("pyphen", "dictionaries")
-except ImportError:
+    dictionaries_root = str(files("skiptir.pyphen").joinpath("dictionaries"))
+except (ImportError, AttributeError, TypeError):
     dictionaries_root = os.path.join(os.path.dirname(__file__), "dictionaries")
 
 LANGUAGES = {}
