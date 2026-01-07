@@ -45,11 +45,11 @@ with the latest Icelandic hyphenation patterns.
 Other modes are not supported yet.
 
 HYPHEN refers to a custom hyphenation character, e.g. `·` or `-`.
-By default, `skiptir` uses the soft hyphen character (`U+00AD`).
+By default, `skiptir` uses the invisible soft hyphen character (`U+00AD`).
 
 ## Version History
 
-TBD
+* 1.0.0 (2026-01-07): Initial package release.
 
 ## License
 
@@ -60,9 +60,7 @@ The program files are licensed under the Apache License, Version 2.0
 (the "License"); you may not use the files except in compliance with
 the License or with another license under which they are also licensed
 according to this file or another written declaration by the author.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
+[You may obtain a copy of the License here](https://www.apache.org/licenses/LICENSE-2.0).
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -75,3 +73,8 @@ limitations under the License.
 The basic funcionality in this package is based on work by Kristján
 Rúnarsson, who originally developed it under the auspices of the
 Icelandic Government's Language Technology Program (2016-2019).
+
+The package includes a modified version of the Pyphen library by
+Wilbert Berendsen and Guillaume Ayoub, which is licensed under the
+GNU LGPL 2.1 or later. See the file `src/skiptir/pyphen/COPYING.LGPL`
+for details.
