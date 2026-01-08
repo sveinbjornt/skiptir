@@ -70,11 +70,14 @@ limitations under the License.
 
 ## Acknowledgements
 
-The basic funcionality in this package is based on work by Kristján
-Rúnarsson, who originally developed it under the auspices of the
-Icelandic Government's Language Technology Program (2016-2019).
+The basic functionality in this package is based on work by
+[Kristján Rúnarsson](https://github.com/krunars), who originally
+developed it under the auspices of the Icelandic Government's
+[Language Technology Program](https://clarin.is/media/uploads/mlt-en.pdf)
+(2018-2022).
 
-The package includes a modified version of the Pyphen library by
+The package includes a modified version of the
+[Pyphen](https://github.com/Kozea/Pyphen) library by
 Wilbert Berendsen and Guillaume Ayoub, which is licensed under the
 GNU LGPL 2.1 or later. See the file `src/skiptir/pyphen/COPYING.LGPL`
 for details.
