@@ -10,7 +10,7 @@ maintainers = [
     { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
 ]
 readme = "README.md"
-license = "BSD-3-Clause"
+license = "Apache-2.0"
 classifiers = [
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
@@ -34,7 +34,7 @@ requires-python = ">=3.9"
 dependencies = []
 
 [project.scripts]
-skiptir = "skiptir.main:main"
+skiptir = "skiptir.cli:main"
 
 [project.urls]
 Repository = "https://github.com/sveinbjornt/skiptir"

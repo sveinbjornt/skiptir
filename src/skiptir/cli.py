@@ -3,6 +3,8 @@
 
 skiptir: Hyphenate Icelandic text
 
+Command line interface.
+
 """
 
 
