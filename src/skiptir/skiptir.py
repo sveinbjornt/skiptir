@@ -6,17 +6,13 @@ Main hyphenation functionality.
 
 """
 
-from typing import Optional
-
 import re
 from .pyphen import Pyphen
 
-from .const import DEFAULT_HYPHENATION_CHAR, DEFAULT_HYPHENATION_MODE
+from .const import DEFAULT_HYPHENATION_CHAR
 
 
-# prepare the Pyphen hyphenator object
-# (includes loading hyphenation dictionary from file)
-hyphenator = Pyphen(lang="is_2020_alpha2_extra", left=1, right=2)
+hyphenator = None
 
 
 # Hyphenates a string of text, preserving its whitespace intact.
@@ -24,19 +20,20 @@ hyphenator = Pyphen(lang="is_2020_alpha2_extra", left=1, right=2)
 # hyphen character to be used (soft hyphen, U+00AD, by default).
 def hyphenate(
     input_text: str,
-    hyphenation_mode: Optional[str] = DEFAULT_HYPHENATION_MODE,
     hyphen_character: str = DEFAULT_HYPHENATION_CHAR,
-):
-    if hyphenation_mode is None:
-        hyphenation_mode = DEFAULT_HYPHENATION_MODE
-    if hyphenation_mode is not DEFAULT_HYPHENATION_MODE:
-        raise Exception(f"Unsupported hyphenation mode: {hyphenation_mode}")
+) -> str:
+    # Lazy-load the hyphenator object, so that it is only created when needed.
+    global hyphenator
+    if not hyphenator:
+        hyphenator = Pyphen(lang="is_2020_alpha2_extra", left=1, right=2)
 
     output_text = ""
 
+    clean_input_text = input_text.replace("\u00ad", "")  # remove any existing soft hyphens
+
     # list for separated words and strings of whitespace from the input
     # guaranteed to return the first string as '' or whitespace
-    words_and_whitespace: list[str] = re.split(r"(\S+)", input_text)
+    words_and_whitespace: list[str] = re.split(r"(\S+)", clean_input_text)
 
     # corresponding list for the hyphenated output
     hyphenated_words_and_whitespace: list[str] = []
