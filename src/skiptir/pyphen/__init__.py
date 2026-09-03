@@ -31,6 +31,12 @@ __all__ = ("Pyphen", "LANGUAGES", "language_fallback")
 # cache of per-file HyphDict objects
 hdcache = {}
 
+# Local modification (skiptir): upper bound on the number of words held in a
+# HyphDict's per-word position cache. Upstream Pyphen lets this grow without
+# limit, which leaks steadily in a long-running process hyphenating a large
+# vocabulary. When the bound is reached the cache is simply dropped.
+MAX_CACHE_SIZE = 10000
+
 # precompile some stuff
 parse_hex = re.compile(r"\^{2}([0-9a-f]{2})").sub
 parse = re.compile(r"(\d?)(\D?)").findall
@@ -216,6 +222,8 @@ class HyphDict(object):
                 for i, reference in enumerate(references)
                 if reference % 2
             ]
+            if len(self.cache) >= MAX_CACHE_SIZE:
+                self.cache.clear()
             self.cache[word] = points
         return points
 

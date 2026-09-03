@@ -1,6 +1,6 @@
 [project]
 name = "skiptir"
-version = "1.0.1"
+version = "2.0.0"
 description = "Hyphenate Icelandic text."
 authors = [
     { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
@@ -10,7 +10,8 @@ maintainers = [
     { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
 ]
 readme = "README.md"
-license = "Apache-2.0"
+license = "Apache-2.0 AND LGPL-2.1-or-later"
+license-files = ["LICENSE.md", "src/skiptir/pyphen/COPYING.LGPL"]
 classifiers = [
     "Operating System :: OS Independent",
     "Development Status :: 5 - Production/Stable",
@@ -46,8 +47,11 @@ Changelog = "https://github.com/sveinbjornt/skiptir#version-history"
 # Dev dependencies
 dev = [
     "pytest==8.4.2",
+    "coverage==7.11.0",
     "types-setuptools==80.9.0.20251223",
-    "ruff>=0.14.10",
+    # Upper bound: a new ruff minor can add rules and turn CI red on an
+    # untouched tree. Raise deliberately.
+    "ruff>=0.14.10,<0.17",
     "pyright>=1.1.407",
 ]
 
@@ -55,7 +59,9 @@ dev = [
 
 [tool.coverage.run]
 branch = true              # Enable branch coverage
-source = ["src/skiptir"]   # Only test coverage of `skiptir` package
+source = ["skiptir"]       # Only test coverage of `skiptir` package (by import
+                           # name, so it resolves whether the package is installed
+                           # or imported from ./src)
 command_line = "-m pytest" # Run all tests when calculating coverage
 
 [tool.coverage.report]
@@ -79,6 +85,8 @@ reportUnnecessaryTypeIgnoreComment = "warning"
 reportUnusedCallResult = "none"
 
 [tool.ruff]
+# Vendored third-party code, kept as close to upstream as possible.
+extend-exclude = ["src/skiptir/pyphen/"]
 # See https://beta.ruff.rs/docs/rules/ for list of rules
 # Enable all rules
 # select = ["ALL"]
@@ -112,10 +120,6 @@ lint.ignore = [
 # Silence complaints when lines are slightly over 88 characters long
 line-length = 100
 
-[tool.ruff.lint.per-file-ignores]
-"./run.py" = ["T201"]
-"cli_client/run.py" = ["INP001", "T201", "PLR0915"]
-
 [tool.ruff.lint.isort]
 section-order = [
     "future",
@@ -136,8 +140,8 @@ typehints = ["typing", "typing_extensions", "types", "types-setuptools"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"skiptir.pyphen" = ["dictionaries/*.dic"]
+"skiptir.pyphen" = ["dictionaries/*.dic", "dictionaries/README.md", "COPYING.LGPL"]
 
 [build-system]
-requires = ["setuptools>=45", "setuptools_scm>=6.2"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"

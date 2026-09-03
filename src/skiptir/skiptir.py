@@ -7,53 +7,53 @@ Main hyphenation functionality.
 """
 
 import re
+
+from .const import (
+    DEFAULT_DICTIONARY,
+    DEFAULT_HYPHENATION_CHAR,
+    DEFAULT_LEFT_MIN,
+    DEFAULT_RIGHT_MIN,
+)
 from .pyphen import Pyphen
 
-from .const import DEFAULT_HYPHENATION_CHAR
+SOFT_HYPHEN = "\u00ad"
 
+# A "word" is a maximal run of word characters (letters and digits). Matching
+# these directly leaves every other character -- whitespace, punctuation,
+# quotation marks -- untouched in the output, and keeps punctuation out of the
+# hyphenator, where it would count towards the minimum syllable lengths and
+# produce breaks such as '"-segj-a' or 'tal-a.'.
+_WORD_RE = re.compile(r"\w+")
 
+# The hyphenator is created on first use rather than at import time, so that
+# importing skiptir does not pay for parsing the hyphenation dictionary.
+# Races are harmless: Pyphen caches parsed dictionaries internally, so a
+# redundant instance costs an object, not a second parse.
 hyphenator = None
 
 
-# Hyphenates a string of text, preserving its whitespace intact.
-# Hyphen character to be used can be specified (soft hyphen, U+00AD, by default).
+def _get_hyphenator() -> Pyphen:
+    global hyphenator
+    if hyphenator is None:
+        hyphenator = Pyphen(
+            lang=DEFAULT_DICTIONARY, left=DEFAULT_LEFT_MIN, right=DEFAULT_RIGHT_MIN
+        )
+    return hyphenator
+
+
+# Hyphenates a string of text, preserving whitespace and punctuation intact.
+# The hyphen character to be used can be specified (soft hyphen, U+00AD, by default).
 def hyphenate(
     input_text: str,
     hyphen_character: str = DEFAULT_HYPHENATION_CHAR,
-    hyphenation_mode: str = "",
 ) -> str:
-    # Lazy-load the hyphenator object, so that it is only created when needed.
-    global hyphenator
-    if not hyphenator:
-        hyphenator = Pyphen(lang="is_2020_alpha2_extra", left=1, right=2)
+    hyph = _get_hyphenator()
 
-    output_text = ""
+    # Remove any pre-existing soft hyphens so that hyphenating already
+    # hyphenated text is idempotent rather than inserting a second set.
+    clean_input_text = input_text.replace(SOFT_HYPHEN, "")
 
-    clean_input_text = input_text.replace("\u00ad", "")  # remove any existing soft hyphens
+    def hyphenate_word(match: "re.Match[str]") -> str:
+        return hyph.inserted(match.group(), hyphen=hyphen_character)  # type: ignore[no-any-return]
 
-    # list for separated words and strings of whitespace from the input
-    # guaranteed to return the first string as '' or whitespace
-    words_and_whitespace: list[str] = re.split(r"(\S+)", clean_input_text)
-
-    # corresponding list for the hyphenated output
-    hyphenated_words_and_whitespace: list[str] = []
-    # first string will be whitespace (or an empty string)
-    is_space = True
-
-    for item in words_and_whitespace:
-        if is_space:
-            # add the spaces directly to the output
-            hyphenated_words_and_whitespace.append(item)
-            # the next item will not be whitespace
-            is_space = False
-        else:  # i.e. if it's a word
-            # hyphenate the word (note that the hyphen is a soft hyphen (U+00AD))
-            hyphenated_words_and_whitespace.append(
-                hyphenator.inserted(item, hyphen=hyphen_character)  # type: ignore
-            )
-            # the next item will be whitespace
-            is_space = True
-
-    output_text = "".join(hyphenated_words_and_whitespace)
-
-    return output_text
+    return _WORD_RE.sub(hyphenate_word, clean_input_text)
