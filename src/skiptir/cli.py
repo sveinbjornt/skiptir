@@ -26,6 +26,7 @@ def main():
         default=DEFAULT_HYPHENATION_CHAR,
         help="Hyphen character to use (default: soft hyphen, U+00AD)",
     )
+    parser.add_argument("--mode", default="", help="Hyphenation mode (ignored)")
     parser.add_argument(
         "--version",
         action="version",

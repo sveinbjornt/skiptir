@@ -1,6 +1,6 @@
 [project]
 name = "skiptir"
-version = "1.0.0"
+version = "1.0.1"
 description = "Hyphenate Icelandic text."
 authors = [
     { name = "Sveinbjorn Thordarson", email = "sveinbjorn@sveinbjorn.org" },
@@ -28,7 +28,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
     "Topic :: Text Processing :: Linguistic",
-] # For classifier list see: https://pypi.org/pypi?%3Aaction=list_classifiers
+]
 keywords = ["icelandic", "iceland", "hyphenation"]
 requires-python = ">=3.9"
 dependencies = []
@@ -51,7 +51,7 @@ dev = [
     "pyright>=1.1.407",
 ]
 
-# *** Configuration of tools ***
+# Tool configuration
 
 [tool.coverage.run]
 branch = true              # Enable branch coverage

@@ -16,11 +16,11 @@ hyphenator = None
 
 
 # Hyphenates a string of text, preserving its whitespace intact.
-# The hyphenation mode can be specified as well as the particular
-# hyphen character to be used (soft hyphen, U+00AD, by default).
+# Hyphen character to be used can be specified (soft hyphen, U+00AD, by default).
 def hyphenate(
     input_text: str,
     hyphen_character: str = DEFAULT_HYPHENATION_CHAR,
+    hyphenation_mode: str = "",
 ) -> str:
     # Lazy-load the hyphenator object, so that it is only created when needed.
     global hyphenator

@@ -29,7 +29,7 @@ hyphenate("Þetta er íslensk setning.", hyphen="-")
 Command line tool usage:
 
 ```bash
-skiptir [--mode MODE] [--hyphen HYPHEN]
+skiptir [--hyphen HYPHEN]
 ```
 
 The tool reads text from standard input and prints the
