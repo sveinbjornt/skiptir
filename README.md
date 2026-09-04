@@ -1,13 +1,13 @@
 [![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![release](https://shields.io/github/v/release/sveinbjornt/skiptir?display_name=tag)](https://github.com/sveinbjornt/skiptir/releases)
 [![PyPI](https://img.shields.io/pypi/v/skiptir)](https://pypi.org/project/skiptir/)
 [![build](https://github.com/sveinbjornt/skiptir/actions/workflows/python-app.yml/badge.svg)](https://github.com/sveinbjornt/skiptir/actions)
 
 # skiptir
 
-`skiptir` is a Python package to hyphenate Icelandic text.
-Requires Python 3.9 or later.
+`skiptir` is a Python package to hyphenate **Icelandic text**.
+Requires Python 3.10 or later.
 
 ## Installation
 
@@ -29,7 +29,7 @@ hyphenate("Þetta er íslensk setning.", hyphen_character="-")
 Command line tool usage:
 
 ```bash
-skiptir [--hyphen HYPHEN] [--version]
+skiptir [--hyphen HYPHEN]
 ```
 
 The tool reads text from standard input and prints the
@@ -40,8 +40,9 @@ echo "Þetta er íslensk setning." | skiptir --hyphen "-"
 Þetta er ís-lensk setn-ing.
 ```
 
-HYPHEN refers to a custom hyphenation character, e.g. `·` or `-`.
-By default, `skiptir` uses the invisible soft hyphen character (`U+00AD`).
+The `--hyphen` flag allows you to specify a custom hyphenation character,
+e.g. `·` or `-`. By default, `skiptir` uses the invisible soft hyphen
+character (`U+00AD`).
 
 Whitespace and punctuation are preserved exactly, and only runs of
 letters and digits are hyphenated, so quotation marks and sentence-final
@@ -49,20 +50,23 @@ punctuation cannot produce a break next to them. Any soft hyphens already
 present in the input are removed first, which makes hyphenating the same
 text twice a no-op.
 
+Break positions follow Icelandic orthography as set out in
+[Ritreglur](https://ritreglur.arnastofnun.is/): the first part of a broken
+word may be a single letter (`ó-lán`, `í-hlut-un`), but a single letter is
+never carried over to the next line (so `karfa` is not broken as `karf-a`).
+
 ## Version History
 
-* 2.0.0 (2026-09-03):
-  * **Breaking:** removed the `hyphenation_mode` parameter of `hyphenate()`
-    and the corresponding `--mode` command line flag. Only pattern-based
-    hyphenation was ever implemented. Calls that passed a mode positionally
-    silently produced wrong output in 1.0.x, hence the major version bump.
-  * Fixed punctuation being treated as part of the word, which allowed
-    breaks such as `"-segj-a` and `tal-a.`
-  * A first syllable must now be at least two characters (`óvin-ir`, not
-    `ó-vin-ir`).
-  * Hyphenation is now idempotent; existing soft hyphens are stripped first.
-  * The hyphenation dictionary is loaded on first use rather than at import.
-  * Added `--version`; invalid input is now reported without a traceback.
+* 2.0.0 (2026-09-04): Major refactoring and API change.
+  * Removed the unused `hyphenation_mode` parameter of `hyphenate()`
+    and the corresponding `--mode` command line flag. This may break code
+    that uses the old API.
+  * Fixed issues where punctuation could be treated as part of a word.
+  * Hyphenation is now idempotent. Existing soft hyphens are stripped first.
+  * The hyphenation dictionary is now lazy-loaded.
+  * Added `--version` flag to CLI.
+  * Invalid UTF-8 input is now handled more gracefully.
+  * Now requires Python 3.10 or later.
 * 1.0.0 (2026-01-07): Initial package release.
 
 ## License
@@ -94,7 +98,7 @@ The basic functionality in this package is based on work by
 developed it under the auspices of the Icelandic Government's
 [Language Technology Program](https://clarin.is/media/uploads/mlt-en.pdf)
 (2018-2022). The bundled hyphenation pattern dictionaries in
-`src/skiptir/pyphen/dictionaries/` originate from that work; see the
+`src/skiptir/pyphen/dictionaries/` originate from that work. See the
 `README.md` in that directory for their provenance.
 
 The package includes a modified version of the

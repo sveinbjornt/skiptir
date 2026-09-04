@@ -20,13 +20,12 @@ from skiptir.cli import main as cli_main
 
 TEST_DIR = Path(__file__).parent
 
-# Cases where the bundled 2020 patterns disagree with the older hand-corrected
-# reference list this fixture originally came from. Both are foreign proper
-# nouns, and neither is fixable by tuning the minimum syllable lengths:
-#   Kambodíu   -> "Kam-bó-d-íu"   (reference: "Kam-bó-díu")
-#   khmeranna  -> "khm-er-anna"   (reference: "kh-mer-anna")
-# They are kept in the fixture deliberately; deleting awkward input to make the
-# suite pass is how the punctuation bug went unnoticed in the first place.
+# The fixture keeps awkward input on purpose -- deleting it to make the suite
+# pass is how the punctuation bug went unnoticed in the first place. One
+# difference from the older reference list the fixture came from is retained
+# knowingly: "khmeranna" hyphenates as "khm-er-anna" under the bundled 2020
+# patterns, where the reference had "kh-mer-anna". It is a foreign proper noun
+# and the two pattern sets simply disagree.
 
 
 def test_hyphenation_against_reference():
@@ -47,12 +46,19 @@ def test_hyphenation_against_reference():
         ("tala.", "tala."),
         ("sinni,", "sinni,"),
         ("(íslensk)", "(ís-lensk)"),
+        ("ódýr.", "ó-dýr."),
         ("„borgaralegir", "„borg-ara-leg-ir"),
-        ("óvinir“,", "óvin-ir“,"),
-        # A single-character first syllable is not acceptable in Icelandic.
-        ("óvinir", "óvin-ir"),
-        ("íbúa", "íbúa"),
-        ("óhemjumargs", "óhemju-margs"),
+        ("óvinir“,", "ó-vin-ir“,"),
+        # Ritreglur explicitly permits a single-letter first part.
+        ("ólán", "ó-lán"),
+        ("íhlutun", "í-hlut-un"),
+        ("óvinir", "ó-vin-ir"),
+        ("íbúa", "í-búa"),
+        ("óhemjumargs", "ó-hemju-margs"),
+        # ...but a single letter may never be carried to the next line.
+        ("karfa", "karfa"),
+        ("tala", "tala"),
+        ("segja", "segja"),
         # Ordinary compounds still hyphenate.
         ("ríkisstjórnarinnar", "rík-is-stjórn-ar-inn-ar"),
         ("íslensk", "ís-lensk"),
@@ -64,7 +70,7 @@ def test_hyphenation_against_reference():
         ("", ""),
     ],
 )
-def test_word_hyphenation(text, expected):
+def test_word_hyphenation(text: str, expected: str):
     assert hyphenate(text, hyphen_character="-") == expected
 
 
@@ -103,11 +109,15 @@ def test_no_hyphen_adjacent_to_punctuation():
     for match in re.finditer("\u00ad", result):
         before = result[match.start() - 1]
         after = result[match.end()]
-        assert before.isalnum(), f"hyphen after {before!r} in {result[match.start()-12:match.end()+12]!r}"
-        assert after.isalnum(), f"hyphen before {after!r} in {result[match.start()-12:match.end()+12]!r}"
+        assert before.isalnum(), (
+            f"hyphen after {before!r} in {result[match.start() - 12 : match.end() + 12]!r}"
+        )
+        assert after.isalnum(), (
+            f"hyphen before {after!r} in {result[match.start() - 12 : match.end() + 12]!r}"
+        )
 
 
-def run_cli(monkeypatch, capsys, argv, stdin_text="Þetta er íslensk setning."):
+def run_cli(monkeypatch, capsys, argv, stdin_text: str = "Þetta er íslensk setning."):
     """Invoke the CLI entry point in-process and return (exit code, stdout, stderr)."""
     monkeypatch.setattr(sys, "argv", ["skiptir", *argv])
     monkeypatch.setattr(sys, "stdin", io.StringIO(stdin_text))
@@ -171,3 +181,21 @@ def test_cli_entry_point_end_to_end():
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == "Þetta er ís-lensk setn-ing."
+
+
+def test_no_single_letter_carried_to_next_line():
+    """Ritreglur: the second part of a break must be at least two characters.
+
+    Checked over the whole reference text: no break may sit one character from
+    the end of a word. The first part may be a single character, which is why
+    only the trailing side is asserted here.
+    """
+    text = (TEST_DIR / "input.txt").read_text(encoding="utf-8")
+    result = hyphenate(text, hyphen_character="\u00ad")
+
+    for word in re.findall(r"[\w\u00ad]+", result):
+        if "\u00ad" not in word:
+            continue  # unbroken words say nothing about break positions
+        parts = word.split("\u00ad")
+        assert len(parts[-1]) >= 2, f"single letter carried over in {word!r}"
+        assert all(parts), f"empty part in {word!r}"

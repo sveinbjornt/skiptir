@@ -9,8 +9,6 @@ Command line interface.
 
 import sys
 
-from . import __version__ as program_version
-
 
 def main() -> int:
     """Hyphenates text from standard input and prints the result
@@ -18,6 +16,7 @@ def main() -> int:
 
     import argparse
 
+    from . import __version__ as program_version
     from .const import DEFAULT_HYPHENATION_CHAR
     from .skiptir import hyphenate
 
@@ -33,7 +32,7 @@ def main() -> int:
     parser.add_argument(
         "--version",
         action="version",
-        version=f"%(prog)s {program_version}",
+        version=f"%(prog)s v. {program_version}",
         help="Show program version and exit",
     )
     args = parser.parse_args()
